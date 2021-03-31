@@ -1,11 +1,26 @@
-let Item = require('../models/item');
+const Item = require('../models/item');
+const Category = require('../models/category');
 
-exports.item_list = function (req, res, next) {
-  res.send('Item list page');
+exports.item_list = (req, res, next) => {
+  Item.find().exec((err, list_items) => {
+    if (err) {
+      return next(err);
+    }
+    res.render('item_list', {
+      title: 'Item List',
+      item_list: list_items,
+    });
+  });
 };
 
-exports.item_detail = function (req, res, next) {
-  res.send('Item detail: ' + req.params.id);
+exports.item_detail = async (req, res, next) => {
+  const item = await Item.findById(req.params.id).exec();
+  const category = await Category.findById(item.category).exec();
+
+  res.render('item_detail', {
+    item: item,
+    category: category,
+  });
 };
 
 exports.item_create_get = function (req, res, next) {

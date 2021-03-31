@@ -7,10 +7,14 @@ body {
   display: grid;
   grid-template-rows: 50px 12fr 50px;
   height: 100vh;
-  grid-template-areas: "header header header" "main main main" "footer footer footer";
-}
-body section {
-  grid-area: main;
+  grid-template-areas:
+    'header header header'
+    'main main main'
+    'footer footer footer';
+
+  section {
+    grid-area: main;
+  }
 }
 
 header {
@@ -19,9 +23,10 @@ header {
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
   background-color: cornsilk;
-}
-header p {
-  justify-self: end;
+
+  p {
+    justify-self: end;
+  }
 }
 
 footer {
@@ -30,5 +35,3 @@ footer {
   display: grid;
   grid-auto-flow: column;
 }
-
-/*# sourceMappingURL=style.css.map */
