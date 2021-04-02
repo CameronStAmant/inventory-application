@@ -1,7 +1,8 @@
 const Category = require('../models/category');
 const Item = require('../models/item');
+const { body, validationResult } = require('express-validator');
 
-exports.category_list = async function (req, res, next) {
+exports.category_list = async (req, res, next) => {
   Category.find().exec((err, list_categories) => {
     if (err) {
       return next(err);
@@ -54,26 +55,56 @@ exports.category_detail = (req, res, next) => {
   });
 };
 */
-exports.category_create_get = function (req, res, next) {
-  res.send('Category create GET');
+exports.category_create_get = (req, res, next) => {
+  res.render('category_form', { title: 'Create Category' });
 };
 
-exports.category_create_post = function (req, res, next) {
-  res.send('Category create POST');
-};
+exports.category_create_post = [
+  body('name')
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage('Category name must be specified.'),
+  body('description').trim().isLength({ min: 1 }).escape(),
 
-exports.category_delete_get = function (req, res, next) {
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render('category_form', {
+        title: 'Create Category',
+        name: req.body.name,
+        description: req.body.description,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      let category = new Category({
+        name: req.body.name,
+        description: req.body.description,
+      });
+      category.save((err) => {
+        if (err) {
+          return next(err);
+        }
+        res.redirect(category.url);
+      });
+    }
+  },
+];
+
+exports.category_delete_get = (req, res, next) => {
   res.send('Category delete GET');
 };
 
-exports.category_delete_post = function (req, res, next) {
+exports.category_delete_post = (req, res, next) => {
   res.send('Category delete POST');
 };
 
-exports.category_update_get = function (req, res, next) {
+exports.category_update_get = (req, res, next) => {
   res.send('Category update GET');
 };
 
-exports.category_update_post = function (req, res, next) {
+exports.category_update_post = (req, res, next) => {
   res.send('Category update POST');
 };

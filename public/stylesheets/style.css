@@ -24,11 +24,39 @@ header p {
   justify-self: end;
 }
 
+section {
+  display: grid;
+  grid-template: 50px 1fr/1fr 1fr 1fr;
+  justify-items: center;
+  grid-auto-flow: column;
+}
+section > * {
+  grid-column-start: 2;
+}
+
+#title {
+  align-self: center;
+}
+
 footer {
   grid-area: footer;
   background-color: thistle;
   display: grid;
   grid-auto-flow: column;
+}
+
+form {
+  display: grid;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+  font-size: 1.5rem;
+}
+form textarea {
+  height: 40px;
+}
+form button {
+  height: 30px;
 }
 
 /*# sourceMappingURL=style.css.map */
