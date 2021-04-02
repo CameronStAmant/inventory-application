@@ -1,0 +1,23 @@
+extends layout 
+
+block content 
+  h1#title= title
+
+  form(method='POST' action='')
+    label(for='name') Item 
+    input#name(type='text' placeholder='Apple, Cabbage, etc' name='name' required='true' value=(undefined===item ? '' : item.name))
+    label(for='description') Description
+    textarea#description(name='description' required='true' value=(undefined===item ? '' : item.description))
+    label(for='category') Category
+    select#category(name='category' required='true' value=(item===undefined ? '' : item.category))
+      for category in categories
+        option(value=category._id) #{category.name}
+    label(for='price') Price
+    input#price(type='number' name='price' step='0.01' required='true')
+    label(for='number_in_stock') Number in Stock
+    input#number_in_stock(type='number' name='number_in_stock' required='true')
+    button(type='submit' required='true') Submit
+  if errors 
+    ul 
+      for errors in errors 
+        li!= error.msg
