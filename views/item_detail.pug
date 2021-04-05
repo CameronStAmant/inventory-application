@@ -3,4 +3,7 @@ extends layout
 block content
   h1= item.name 
   
-  a(href=category.url) #{category.name}
+  div
+    a(href=category.url) #{category.name}
+    br
+    a(href=item.url + '/delete') Delete item

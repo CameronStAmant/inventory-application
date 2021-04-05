@@ -1,0 +1,21 @@
+extends layout 
+
+block content 
+  h1= title
+
+  div 
+    if items.length
+      p Delete the following items before deleting the category:
+        ul 
+          each item in items 
+            li= item.name
+    else
+      p Are you sure you want to delete #{category.name}?
+
+      div#cancelDelete
+        form(method='GET' action='/category')
+          input(type='hidden', name='categoryid', required='true', value=category._id)
+          button(type='submit') Cancel 
+        form(method='POST' action='')
+          input(type='hidden', name='categoryid', required='true', value=category._id)
+          button(type='submit') Delete

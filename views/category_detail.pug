@@ -1,9 +1,11 @@
 extends layout 
 
 block content 
-  h1= category 
+  h1= category.name
 
-  ul
-    each item in category_items 
-      li 
-        a(href=item.url) #{item.name}
+  div
+    ul
+      each item in category_items 
+        li 
+          a(href=item.url) #{item.name}
+    a(href=category.url + '/delete') Delete Category

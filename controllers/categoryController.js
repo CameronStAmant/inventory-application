@@ -28,7 +28,7 @@ exports.category_detail = async (req, res, next) => {
       return next(err);
     }
     res.render('category_detail', {
-      category: category.name,
+      category: category,
       category_items: items,
     });
   } catch (e) {
@@ -93,12 +93,114 @@ exports.category_create_post = [
   },
 ];
 
+// promise example
+/*
 exports.category_delete_get = (req, res, next) => {
-  res.send('Category delete GET');
+  let category = Category.findById(req.params.id).exec();
+  let item = Item.find({ category: req.params.id }, 'name').exec();
+
+  Promise.all([category, item]).then((values) => {
+    if (values[0] === null) {
+      let err = new Error('Category not found');
+      err.status = 404;
+      return next(err);
+    } else if (values[1] === null) {
+      let err = new Error('Item not found');
+      err.status = 404;
+      return next(err);
+    }
+    res.render('category_delete', {
+      title: 'Delete Category',
+      category: values[0],
+      item: values[1],
+    });
+  });
+};
+*/
+
+// async example
+exports.category_delete_get = async (req, res, next) => {
+  let category = await Category.findById(req.params.id).exec();
+  let items = await Item.find({ category: req.params.id }).exec();
+
+  if (category === null) {
+    let err = new Error('Category not found');
+    err.status = 404;
+    return next(err);
+  } else if (items === null) {
+    let err = new Error('Items not found');
+    err.status = 404;
+    return next(err);
+  }
+  res.render('category_delete', {
+    title: 'Delete Category',
+    category: category,
+    items: items,
+  });
 };
 
+// promise example
+/*
 exports.category_delete_post = (req, res, next) => {
-  res.send('Category delete POST');
+  let category = Category.findById(req.body.categoryid).exec();
+  let items = Item.find({ category: req.body.categoryid }).exec();
+
+  Promise.all([category, items]).then((values) => {
+    if (values[0] === null) {
+      let err = new Error('Category not found');
+      err.status = 404;
+      return next(err);
+    } else if (values[1] === null) {
+      let err = new Error('Items not found');
+      err.status = 404;
+      return next(err);
+    }
+    if (values[1].length > 0) {
+      res.render('category_delete', {
+        title: 'Delete Category',
+        category: category,
+        items: items,
+      });
+    } else {
+      Category.findByIdAndDelete(req.body.categoryid, (err) => {
+        if (err) {
+          return next(err);
+        }
+        res.redirect('/category');
+      });
+    }
+  });
+};
+*/
+
+// async example
+exports.category_delete_post = async (req, res, next) => {
+  let category = await Category.findById(req.body.categoryid).exec();
+  let items = await Item.find({ category: req.body.categoryidi }).exec();
+
+  if (category === null) {
+    let err = new Error('Category not found');
+    err.status = 404;
+    return next(err);
+  } else if (items === null) {
+    let err = new Error('Items not found');
+    err.status = 404;
+    return next(err);
+  }
+  if (items.length > 0) {
+    res.render('category_delete', {
+      title: 'Delete Category',
+      category: category,
+      items: items,
+    });
+  } else {
+    Category.findByIdAndDelete(req.body.categoryid, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect('/category');
+    });
+  }
 };
 
 exports.category_update_get = (req, res, next) => {

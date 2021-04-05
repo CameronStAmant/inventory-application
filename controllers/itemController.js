@@ -80,12 +80,69 @@ exports.item_create_post = [
   },
 ];
 
-exports.item_delete_get = (req, res, next) => {
-  res.send('Item delete GET');
+// promise example
+// exports.item_delete_get = (req, res, next) => {
+//   let item = Item.findById(req.params.id).exec();
+//   let category = item.then((value) => {
+//     return Category.findById(value.category[0]).exec();
+//   });
+
+//   Promise.all([item, category]).then((values) => {
+//     if (values[0] === null) {
+//       let err = new Error('Item not found');
+//       err.status = 404;
+//       return next(err);
+//     } else if (values[1] === null) {
+//       let err = new Error('Category not found');
+//       err.status = 404;
+//       return next(err);
+//     }
+//     res.render('item_delete', {
+//       title: 'Delete Item',
+//       item: values[0],
+//       category: values[1],
+//     });
+//   });
+// };
+
+// async example
+exports.item_delete_get = async (req, res, next) => {
+  let item = await Item.findById(req.params.id).exec();
+  let category = await Category.findById(item.category).exec();
+
+  if (item === null) {
+    let err = new Error('Item not found');
+    err.status = 404;
+    return next(err);
+  } else if (category === null) {
+    let err = new Error('Category not found');
+    err.status = 404;
+    return next(err);
+  }
+  res.render('item_delete', {
+    title: 'Delete Item',
+    item: item,
+    category: category,
+  });
 };
 
+//promise example
 exports.item_delete_post = (req, res, next) => {
-  res.send('Item delete POST');
+  let item = Item.findById(req.params.id)
+    .exec()
+    .then((value) => {
+      if (value === null) {
+        let err = new Error('Item not found');
+        err.status = 404;
+        return next(err);
+      }
+      Item.findByIdAndDelete(req.params.id, (err) => {
+        if (err) {
+          return next(err);
+        }
+        res.redirect('/item');
+      });
+    });
 };
 
 exports.item_update_get = (req, res, next) => {
