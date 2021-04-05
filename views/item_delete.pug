@@ -6,7 +6,7 @@ block content
   div
     p Are you sure you want to delete #{item.name} from category #{category.name}?
 
-    div#cancelDelete
+    div.sideBySideButtons
       form(method='GET' action='/item')
         input(type='hidden', name='itemid', required='true', value=item._id)
         button(type='submit') Cancel

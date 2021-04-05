@@ -5,9 +5,12 @@ block content
 
   form(method='POST' action='')
     label(for='name') Category
-    input#name(type='text' placeholder='Fruit, Vegetable, etc' name='name' required='true' value=(undefined===category ? '' : category.name))
+    input#name(type='text' placeholder='Fruit, Vegetable, etc' name='name' required='true' value=(category===undefined ? '' : category.name))
     label(for='description') Description
-    textarea#description(name='description' value=(undefined===category ? '' : category.description))
+    if category!==undefined
+      textarea#description(name='description') #{category.description}
+    else 
+      textarea#description(name='description')
     button(type='submit') Submit
   if errors 
     ul 

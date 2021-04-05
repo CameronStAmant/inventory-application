@@ -142,8 +142,8 @@ exports.category_delete_get = async (req, res, next) => {
 // promise example
 /*
 exports.category_delete_post = (req, res, next) => {
-  let category = Category.findById(req.body.categoryid).exec();
-  let items = Item.find({ category: req.body.categoryid }).exec();
+  let category = Category.findById(req.params.id).exec();
+  let items = Item.find({ category: req.params.id }).exec();
 
   Promise.all([category, items]).then((values) => {
     if (values[0] === null) {
@@ -162,7 +162,7 @@ exports.category_delete_post = (req, res, next) => {
         items: items,
       });
     } else {
-      Category.findByIdAndDelete(req.body.categoryid, (err) => {
+      Category.findByIdAndDelete(req.params.id, (err) => {
         if (err) {
           return next(err);
         }
@@ -175,8 +175,8 @@ exports.category_delete_post = (req, res, next) => {
 
 // async example
 exports.category_delete_post = async (req, res, next) => {
-  let category = await Category.findById(req.body.categoryid).exec();
-  let items = await Item.find({ category: req.body.categoryidi }).exec();
+  let category = await Category.findById(req.params.id).exec();
+  let items = await Item.find({ category: req.params.id }).exec();
 
   if (category === null) {
     let err = new Error('Category not found');
@@ -194,7 +194,7 @@ exports.category_delete_post = async (req, res, next) => {
       items: items,
     });
   } else {
-    Category.findByIdAndDelete(req.body.categoryid, (err) => {
+    Category.findByIdAndDelete(req.params.id, (err) => {
       if (err) {
         return next(err);
       }
@@ -203,10 +203,80 @@ exports.category_delete_post = async (req, res, next) => {
   }
 };
 
+// promise example
+/*
 exports.category_update_get = (req, res, next) => {
-  res.send('Category update GET');
+  let category = Category.findById(req.params.id)
+    .exec()
+    .then((value) => {
+      if (value === null) {
+        let err = new Error('Category not found');
+        err.status = 404;
+        return next(err);
+      }
+      res.render('category_form', {
+        title: 'Update Category',
+        category: value,
+      });
+    });
+};
+*/
+
+// async example
+exports.category_update_get = async (req, res, next) => {
+  let category = await (await Category.findById(req.params.id)).execPopulate();
+
+  if (category === null) {
+    let err = new Error('Category not found');
+    err.status = 404;
+    return next(err);
+  }
+  res.render('category_form', {
+    title: 'Update Category',
+    category: category,
+  });
 };
 
-exports.category_update_post = (req, res, next) => {
-  res.send('Category update POST');
-};
+exports.category_update_post = [
+  body('name', 'Category name required').trim().isLength({ min: 1 }).escape(),
+  body('description').trim().escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    let category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render('category_form', {
+        title: 'Update Category',
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      Category.findOne({ name: req.body.name }).exec((err, found_category) => {
+        if (err) {
+          return next(err);
+        }
+        if (found_category) {
+          res.redirect(found_category.url);
+        } else {
+          Category.findByIdAndUpdate(
+            req.params.id,
+            category,
+            {},
+            (err, theCategory) => {
+              if (err) {
+                return next(err);
+              }
+              res.redirect(theCategory.url);
+            }
+          );
+        }
+      });
+    }
+  },
+];

@@ -57,7 +57,7 @@ form button {
   height: 30px;
 }
 
-#cancelDelete {
+.sideBySideButtons {
   display: grid;
   grid-auto-flow: column;
 }
