@@ -8,9 +8,9 @@ block content
     input#name(type='text' placeholder='Fruit, Vegetable, etc' name='name' required='true' value=(category===undefined ? '' : category.name))
     label(for='description') Description
     if category!==undefined
-      textarea#description(name='description') #{category.description}
+      textarea#description(name='description' required='true') #{category.description}
     else 
-      textarea#description(name='description')
+      textarea#description(name='description' required='true')
     button(type='submit') Submit
   if errors 
     ul 

@@ -60,12 +60,14 @@ exports.category_create_get = (req, res, next) => {
 };
 
 exports.category_create_post = [
-  body('name')
+  body('name', 'Category name must be specified.')
     .trim()
     .isLength({ min: 1 })
-    .escape()
-    .withMessage('Category name must be specified.'),
-  body('description').trim().isLength({ min: 1 }).escape(),
+    .escape(),
+  body('description', 'Description required')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -83,11 +85,20 @@ exports.category_create_post = [
         name: req.body.name,
         description: req.body.description,
       });
-      category.save((err) => {
+      Category.findOne({ name: req.body.name }).exec((err, found_category) => {
         if (err) {
           return next(err);
         }
-        res.redirect(category.url);
+        if (found_category !== null) {
+          res.redirect(found_category.url);
+        } else {
+          category.save((err) => {
+            if (err) {
+              return next(err);
+            }
+            res.redirect(category.url);
+          });
+        }
       });
     }
   },
@@ -239,7 +250,10 @@ exports.category_update_get = async (req, res, next) => {
 
 exports.category_update_post = [
   body('name', 'Category name required').trim().isLength({ min: 1 }).escape(),
-  body('description').trim().escape(),
+  body('description', 'Category name must be specified.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -248,7 +262,6 @@ exports.category_update_post = [
       description: req.body.description,
       _id: req.params.id,
     });
-
     if (!errors.isEmpty()) {
       res.render('category_form', {
         title: 'Update Category',
@@ -261,7 +274,7 @@ exports.category_update_post = [
         if (err) {
           return next(err);
         }
-        if (found_category) {
+        if (found_category !== null) {
           res.redirect(found_category.url);
         } else {
           Category.findByIdAndUpdate(
