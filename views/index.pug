@@ -2,4 +2,12 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  div 
+    p Welcome to the stores update system! There are #{categoryTotal} categories and #{itemTotal} items total. You can create, read, write, and delete anything here.
+
+    h3 Go to:
+      div.sideBySideButtons
+        form(action='/category')
+          input(type='submit' value='Categories')
+        form(action='/item')
+          input(type='submit' value='Items')

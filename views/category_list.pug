@@ -3,7 +3,14 @@ extends layout
 block content
   h1= title 
 
-  ul 
-    each category in category_list 
-      li 
-        a(href=category.url) #{category.name}
+  div
+    ul 
+      each category in category_list 
+        li 
+          a(href=category.url) #{category.name}
+    h3 Go to:
+    div.sideBySideButtons
+      form(action='/')
+        input(type='submit' value='Home')
+      form(action='/item')
+        input(type='submit' value='Items')
