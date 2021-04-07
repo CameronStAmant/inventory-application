@@ -9,6 +9,9 @@ var usersRouter = require('./routes/users');
 let categoryRouter = require('./routes/category');
 let itemRouter = require('./routes/item');
 
+let compression = require('compression');
+var helmet = require('helmet');
+
 var app = express();
 
 let mongoose = require('mongoose');
@@ -26,6 +29,9 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression());
+app.use(helmet());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
