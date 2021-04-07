@@ -1,17 +1,15 @@
 extends layout
 
 block content
-  h1= item.name 
-  
+  h1.header= item.name 
+  div.sideBySideButtons
+    form(action=item.url + '/delete')
+      input(type='submit', value='Delete')
+    form(action=item.url + '/update')
+      input(type='submit', value='Update')
   div
-    a(href=category.url) #{category.name}
-    br
-    a(href=item.url + '/delete') Delete item
-
-    div.sideBySideButtons
-      form(method='GET' action=item.url + '/update')
-        input(type='hidden', name='itemid', required='true', value=item._id)
-        button(type='submit') Update
-      form(method='GET' action=item.url + '/delete')
-        input(type='hidden', name='itemid', required='true' value=item._id)
-        button(type='submit') Delete
+    p Description: #{item.description}
+    p Category: 
+      a(href=category.url) #{category.name}
+    p Price: $#{item.price}
+    p Number in stock: #{item.number_in_stock}

@@ -3,9 +3,13 @@
   margin: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 body {
   display: grid;
-  grid-template-rows: 50px 12fr 50px;
+  grid-template-rows: 50px 1fr 50px;
   height: 100vh;
   grid-template-areas:
     'header header header'
@@ -22,17 +26,25 @@ header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
-  background-color: cornsilk;
+  background-color: rgb(247, 246, 241);
 
-  p {
-    justify-self: end;
+  > div {
+    grid-column-start: 2;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(3, 1fr);
+
+    a {
+      place-self: center;
+      color: #000;
+    }
   }
 }
 
 section {
   display: grid;
-  grid-template: 50px 1fr / 1fr 1fr 1fr;
-  justify-items: center;
+  grid-template: 50px 20px 1fr / 1fr 1fr 1fr;
+  // justify-items: center;
   grid-auto-flow: column;
   grid-auto-rows: max-content;
   > * {
@@ -40,15 +52,20 @@ section {
   }
 }
 
-#title {
-  align-self: center;
+.header {
+  place-self: center;
+  text-align: center;
 }
 
 footer {
   grid-area: footer;
-  background-color: thistle;
+  background-color: rgb(247, 246, 241);
   display: grid;
   grid-auto-flow: column;
+
+  > p {
+    place-self: center;
+  }
 }
 
 form {
@@ -66,4 +83,14 @@ form {
 .sideBySideButtons {
   display: grid;
   grid-auto-flow: column;
+}
+
+.centerText {
+  text-align: center;
+}
+
+.inline {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr 1fr;
 }

@@ -1,16 +1,11 @@
 extends layout
 
 block content
-  h1= title 
-
+  h1.header= title 
+  form(action='/category/create')
+    input(type='submit' value='Add category')
   div
     ul 
       each category in category_list 
         li 
           a(href=category.url) #{category.name}
-    h3 Go to:
-    div.sideBySideButtons
-      form(action='/')
-        input(type='submit' value='Home')
-      form(action='/item')
-        input(type='submit' value='Items')

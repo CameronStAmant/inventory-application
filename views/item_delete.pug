@@ -1,15 +1,11 @@
 extends layout 
 
 block content
-  h1= title
-
+  h1.header= title
+  div.sideBySideButtons
+    form(method='GET' action='/item/' + item.id)
+      input(type='submit', required='true', value='Cancel')
+    form(method='POST' action='')
+      input(type='submit', required='true', value='Delete')
   div
-    p Are you sure you want to delete #{item.name} from category #{category.name}?
-
-    div.sideBySideButtons
-      form(method='GET' action='/item')
-        input(type='hidden', name='itemid', required='true', value=item._id)
-        button(type='submit') Cancel
-      form(method='POST' action='')
-        input(type='hidden', name='itemid', required='true', value=item._id)
-        button(type='submit') Delete
+    p.centerText Are you sure you want to delete #{item.name} from category #{category.name}?

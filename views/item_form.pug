@@ -1,7 +1,7 @@
 extends layout 
 
 block content 
-  h1#title= title
+  h1.header= title
 
   form(method='POST' action='')
     label(for='name') Item 
@@ -14,7 +14,10 @@ block content
     label(for='category') Category
     select#category(name='category' required='true')
         for category in categories
-          option(value=category.id, selected=(category._id.toString() === item.category[0].toString() ? true : false)) #{category.name}
+          if item !== undefined
+            option(value=category.id, selected=(category._id.toString() === item.category[0].toString() ? true : false)) #{category.name}
+          else 
+            option(value=category.id) #{category.name}
     label(for='price') Price
     input#price(type='number' name='price' step='0.01' required='true' value=(item === undefined ? '' : item.price))
     label(for='number_in_stock') Number in Stock

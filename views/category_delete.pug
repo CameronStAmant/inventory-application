@@ -1,21 +1,21 @@
 extends layout 
 
 block content 
-  h1= title
-
+  h1.header= title
+  div.sideBySideButtons
+    form(method='GET' action='/category/' + category.id)
+      input(type='submit', required='true', value='Cancel')
+    form(method='POST' action='')
+      input(type='submit', required='true', value='Delete')
   div 
     if items.length
-      p Delete the following items before deleting the category:
+      p.centerText Delete the following items before deleting the category:
         ul 
           each item in items 
-            li= item.name
+            div.inline
+              li= item.name
+              form(method='POST' action='/item/' + item.id + '/delete')
+                input(type='submit', required='true', value='Delete')
     else
-      p Are you sure you want to delete #{category.name}?
+      p.centerText Are you sure you want to delete #{category.name}?
 
-      div.sideBySideButtons
-        form(method='GET' action='/category')
-          input(type='hidden', name='categoryid', required='true', value=category._id)
-          button(type='submit') Cancel 
-        form(method='POST' action='')
-          input(type='hidden', name='categoryid', required='true', value=category._id)
-          button(type='submit') Delete

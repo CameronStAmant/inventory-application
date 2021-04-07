@@ -5,7 +5,7 @@ exports.index = async (req, res, next) => {
   let categoryCount = await Item.countDocuments({});
   let itemCount = await Category.countDocuments({});
   res.render('index', {
-    title: 'Home',
+    title: 'Welcome!',
     categoryTotal: categoryCount,
     itemTotal: itemCount,
   });

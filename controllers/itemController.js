@@ -140,7 +140,11 @@ exports.item_delete_post = (req, res, next) => {
         if (err) {
           return next(err);
         }
-        res.redirect('/item');
+        if (req.header('Referer').includes('category')) {
+          res.redirect(req.header('Referer'));
+        } else {
+          res.redirect('/item');
+        }
       });
     });
 };
