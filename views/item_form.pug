@@ -5,17 +5,20 @@ block content
 
   form(method='POST' action='')
     label(for='name') Item 
-    input#name(type='text' placeholder='Apple, Cabbage, etc' name='name' required='true' value=(undefined===item ? '' : item.name))
+    input#name(type='text' placeholder='Apple, Cabbage, etc' name='name' required='true' value=(item === undefined ? '' : item.name))
     label(for='description') Description
-    textarea#description(name='description' required='true' value=(undefined===item ? '' : item.description))
+    if item !== undefined 
+      textarea#description(name='description' required='true') #{item.description}
+    else 
+      textarea#description(name='description' required='true')
     label(for='category') Category
-    select#category(name='category' required='true' value=(item===undefined ? '' : item.category))
-      for category in categories
-        option(value=category._id) #{category.name}
+    select#category(name='category' required='true')
+        for category in categories
+          option(value=category.id, selected=(category._id.toString() === item.category[0].toString() ? true : false)) #{category.name}
     label(for='price') Price
-    input#price(type='number' name='price' step='0.01' required='true')
+    input#price(type='number' name='price' step='0.01' required='true' value=(item === undefined ? '' : item.price))
     label(for='number_in_stock') Number in Stock
-    input#number_in_stock(type='number' name='number_in_stock' required='true')
+    input#number_in_stock(type='number' name='number_in_stock' required='true' value=(item === undefined ? '' : item.number_in_stock))
     button(type='submit' required='true') Submit
   if errors 
     ul 

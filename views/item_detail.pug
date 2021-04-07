@@ -7,3 +7,11 @@ block content
     a(href=category.url) #{category.name}
     br
     a(href=item.url + '/delete') Delete item
+
+    div.sideBySideButtons
+      form(method='GET' action=item.url + '/update')
+        input(type='hidden', name='itemid', required='true', value=item._id)
+        button(type='submit') Update
+      form(method='GET' action=item.url + '/delete')
+        input(type='hidden', name='itemid', required='true' value=item._id)
+        button(type='submit') Delete

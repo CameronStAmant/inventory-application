@@ -145,10 +145,80 @@ exports.item_delete_post = (req, res, next) => {
     });
 };
 
+// promise example
 exports.item_update_get = (req, res, next) => {
-  res.send('Item update GET');
+  let item = Item.findById(req.params.id).exec();
+  let category = Category.find().exec();
+
+  Promise.all([item, category]).then((values) => {
+    if (values[0] === null) {
+      let err = new Error('Item not found');
+      err.status = 404;
+      return next(err);
+    } else if (values[1] === null) {
+      let err = new Error('Categories not found');
+      err.status = 404;
+      return next(err);
+    }
+
+    res.render('item_form', {
+      title: 'Update Item',
+      item: values[0],
+      categories: values[1],
+    });
+  });
 };
 
-exports.item_update_post = (req, res, next) => {
-  res.send('Item update POST');
-};
+exports.item_update_post = [
+  body('name', 'Item name must be specified.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('description', 'Description must be specified.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    let item = new Item({
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      number_in_stock: req.body.number_in_stock,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render('item_form', {
+        title: 'Update Item',
+        name: req.body.name,
+        description: req.body.description,
+        category: req.body.category,
+        price: req.body.price,
+        number_in_stock: req.body.number_in_stock,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      Item.findOne({ name: req.body.name }).exec((err, found_item) => {
+        if (err) {
+          return next(err);
+        }
+        if (found_item !== null && found_item.id !== req.params.id) {
+          console.log('found');
+          res.redirect(found_item.url);
+        } else {
+          Item.findByIdAndUpdate(req.params.id, item, {}, (err, theItem) => {
+            if (err) {
+              return next(err);
+            }
+            console.log(theItem);
+            res.redirect(theItem.url);
+          });
+        }
+      });
+    }
+  },
+];
