@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -12,8 +13,7 @@ let itemRouter = require('./routes/item');
 var app = express();
 
 let mongoose = require('mongoose');
-let mongoDB =
-  'mongodb+srv://user573473456764536543:AghScNV3VhdZks47Q62gLa26L43q426LTdPk323QPci5ydFR@cluster0.rtgcd.mongodb.net/inventory-application?retryWrites=true&w=majority';
+let mongoDB = process.env.MONGODB_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
